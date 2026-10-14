@@ -1,0 +1,8 @@
+Flask
+flask-cors
+PyJWT
+python-dotenv
+pyodbc
+pdfplumber
+python-docx
+scikit-learn
