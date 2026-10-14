@@ -20,7 +20,11 @@ def create_app():
     @app.route("/api/health")
     def health():
         return jsonify({"status": "ok"})
-
+    
+    @app.route("/")
+    def home():
+        return jsonify({"message": "Resume Analyser API is running."})
+    
     @app.errorhandler(413)
     def too_large(e):
         return jsonify({"error": f"File is too large. The limit is {Config.MAX_UPLOAD_MB} MB."}), 413
