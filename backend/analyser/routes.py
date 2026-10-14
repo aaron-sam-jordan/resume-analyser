@@ -1,24 +1,30 @@
 from flask import Blueprint, request, jsonify
 from middleware.auth_middleware import login_required
-from auth import controller
+from analyser import controller
 
-auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
-
-
-@auth_bp.route("/register", methods=["POST"])
-def register():
-    body, status = controller.register_user(request.get_json(silent=True) or {})
-    return jsonify(body), status
+analyser_bp = Blueprint("analyser", __name__, url_prefix="/api")
 
 
-@auth_bp.route("/login", methods=["POST"])
-def login():
-    body, status = controller.login_user(request.get_json(silent=True) or {})
-    return jsonify(body), status
-
-
-@auth_bp.route("/me", methods=["GET"])
+@analyser_bp.route("/analyse", methods=["POST"])
 @login_required
-def me():
-    body, status = controller.get_current_user()
+def analyse():
+    body, status = controller.analyse_resume(
+        request.files.get("resume"),
+        request.form.get("jd", ""),
+        request.form.get("job_title", ""),
+    )
+    return jsonify(body), status
+
+
+@analyser_bp.route("/analyses", methods=["GET"])
+@login_required
+def history():
+    body, status = controller.my_history()
+    return jsonify(body), status
+
+
+@analyser_bp.route("/analyses/<int:analysis_id>", methods=["GET"])
+@login_required
+def one(analysis_id):
+    body, status = controller.get_one(analysis_id)
     return jsonify(body), status

@@ -1,64 +1,65 @@
-import pyodbc
-from datetime import datetime, timedelta, timezone
-import jwt
+import os
 from flask import g
-from werkzeug.security import generate_password_hash, check_password_hash
-from config import Config
-from models import user_model
-from services.validator import EMAIL_RE
+from models import analysis_model, skill_model
+from services.validator import check_file, check_jd, check_resume_text, length_rule
+from services.extractor import extract_text
+from services.matcher import analyse
 
 
-def _make_token(user_id):
-    payload = {
-        "user_id": user_id,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=Config.JWT_EXPIRY_HOURS),
-    }
-    return jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
+def _shape(row):
+    details = row.pop("details")
+    row["suggestions"] = details.pop("suggestions", [])
+    row["details"] = details
+    return row
 
 
-def _public(user):
-    return {"id": user["id"], "name": user["name"],
-            "email": user["email"], "role": user["role"]}
+def analyse_resume(file, jd, job_title):
+    error = check_file(file)
+    if error:
+        return {"error": error}, 400
+    error = check_jd(jd)
+    if error:
+        return {"error": error}, 400
+
+    text, page_count, error = extract_text(file)
+    if error:
+        return {"error": error}, 422
+    error = check_resume_text(text)
+    if error:
+        return {"error": error}, 422
+
+    result, error = analyse(text, jd, skill_model.get_all())
+    if error:
+        return {"error": error}, 422
+
+    length_msg, cap = length_rule(page_count)
+    length_penalty = cap is not None
+    if length_penalty:
+        result["score"] = min(result["score"], cap)
+    if length_msg:
+        result["suggestions"].insert(0, length_msg)
+    result["details"]["page_count"] = page_count
+    result["details"]["length_penalty"] = length_penalty
+
+    title = (job_title or "").strip()[:150] or None
+    filename = os.path.basename(file.filename)[:255]
+    saved_details = {**result["details"], "suggestions": result["suggestions"]}
+
+    result["id"] = analysis_model.save_analysis(
+        g.user["id"], title, filename, result["score"], result["skill_score"],
+        result["text_score"], result["matched_skills"], result["missing_skills"],
+        saved_details)
+    result["job_title"] = title
+    result["resume_filename"] = filename
+    return result, 201
 
 
-def register_user(data):
-    name = (data.get("name") or "").strip()
-    email = (data.get("email") or "").strip().lower()
-    password = data.get("password") or ""
-
-    if not name or not email or not password:
-        return {"error": "Fill in all the fields."}, 400
-    if len(name) > 100 or len(email) > 150:
-        return {"error": "Name or email is too long."}, 400
-    if not EMAIL_RE.fullmatch(email):
-        return {"error": "Enter a valid email address."}, 400
-    if len(password) < 8:
-        return {"error": "Password must be at least 8 characters."}, 400
-    if user_model.get_by_email(email):
-        return {"error": "This email is already registered."}, 409
-
-    try:
-        user_model.create_user(name, email, generate_password_hash(password))
-    except pyodbc.IntegrityError:
-        return {"error": "This email is already registered."}, 409
-    return {"message": "Account created. Please log in."}, 201
+def my_history():
+    return {"analyses": analysis_model.get_by_user(g.user["id"])}, 200
 
 
-def login_user(data):
-    email = (data.get("email") or "").strip().lower()
-    password = data.get("password") or ""
-
-    if not email or not password:
-        return {"error": "Enter your email and password."}, 400
-
-    user = user_model.get_by_email(email)
-    if not user or not check_password_hash(user["password_hash"], password):
-        return {"error": "Wrong email or password."}, 401
-    if user["is_blocked"]:
-        return {"error": "Your account is blocked."}, 403
-
-    return {"token": _make_token(user["id"]), "user": _public(user)}, 200
-
-
-def get_current_user():
-    return {"user": _public(g.user)}, 200
+def get_one(analysis_id):
+    row = analysis_model.get_one_for_user(analysis_id, g.user["id"])
+    if not row:
+        return {"error": "Analysis not found."}, 404
+    return _shape(row), 200
