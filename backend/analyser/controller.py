@@ -1,6 +1,7 @@
 import os
-from flask import g
-from models import analysis_model, skill_model
+from flask import g 
+from models import analysis_model, skill_model 
+from services.experience import compare as compare_experience
 from services.validator import check_file, check_jd, check_resume_text, length_rule
 from services.extractor import extract_text
 from services.matcher import analyse

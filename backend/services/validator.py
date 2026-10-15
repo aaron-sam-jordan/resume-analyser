@@ -10,7 +10,8 @@ MIN_TEXT_CHARS = 100
 SECTION_WORDS = ["education", "experience", "skills", "projects",
                  "summary", "objective", "certifications", "internship"]
 EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
-PHONE_RE = re.compile(r"\+?\d[\d\s\-]{8,}\d")
+LINK_RE = re.compile(r"linkedin|github", re.IGNORECASE)
+PHONE_RE = re.compile(r"\+?\d[\d\s\-().]{8,}\d")
 
 
 def check_file(file):
@@ -54,7 +55,7 @@ def check_resume_text(text):
 
     lower = text.lower()
     sections = sum(1 for w in SECTION_WORDS if re.search(rf"\b{w}\b", lower))
-    has_contact = bool(EMAIL_RE.search(text) or PHONE_RE.search(text))
+    has_contact = bool(EMAIL_RE.search(text) or PHONE_RE.search(text) or LINK_RE.search(text))
     if sections < 2 or not has_contact:
         return "This does not look like a resume. It needs sections like Education or Skills, and an email or phone number."
 
