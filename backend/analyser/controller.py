@@ -1,8 +1,8 @@
 import os
 from flask import g 
 from models import analysis_model, skill_model 
-from services.experience import compare as compare_experience
 from services.validator import check_file, check_jd, check_resume_text, length_rule
+from services.experience import compare as compare_experience
 from services.extractor import extract_text
 from services.matcher import analyse
 
@@ -32,6 +32,11 @@ def analyse_resume(file, jd, job_title):
     result, error = analyse(text, jd, skill_model.get_all())
     if error:
         return {"error": error}, 422
+
+    exp, exp_note = compare_experience(text, jd)
+    result["details"]["experience"] = exp
+    if exp_note:
+        result["suggestions"].append(exp_note)
 
     length_msg, cap = length_rule(page_count)
     length_penalty = cap is not None
