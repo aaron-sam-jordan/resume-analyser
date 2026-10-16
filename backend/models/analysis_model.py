@@ -108,3 +108,17 @@ def most_missing_skills(limit=5):
     for r in fetch_all("SELECT missing_skills FROM analyses"):
         counter.update(json.loads(r["missing_skills"] or "[]"))
     return [{"skill": k, "count": v} for k, v in counter.most_common(limit)]
+
+
+def list_for_admin(user_id):
+    # Privacy: no resume file name and no resume content, only results
+    sql = """
+        SELECT id, job_title, score, skill_score, text_score,
+               matched_skills, missing_skills, created_at
+        FROM analyses WHERE user_id = ? ORDER BY created_at DESC
+    """
+    rows = [_clean(r) for r in fetch_all(sql, (user_id,))]
+    for r in rows:
+        r["matched_skills"] = json.loads(r["matched_skills"] or "[]")
+        r["missing_skills"] = json.loads(r["missing_skills"] or "[]")
+    return rows

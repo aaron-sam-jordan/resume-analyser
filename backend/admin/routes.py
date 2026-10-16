@@ -66,3 +66,10 @@ def create_skill():
 def delete_skill(skill_id):
     body, status = controller.remove_skill(skill_id)
     return jsonify(body), status
+
+
+@admin_bp.route("/users/<int:user_id>", methods=["GET"])
+@admin_required
+def user_detail(user_id):
+    body, status = controller.user_detail(user_id)
+    return jsonify(body), status

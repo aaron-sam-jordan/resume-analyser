@@ -1,3 +1,4 @@
+from collections import Counter
 from models import user_model, analysis_model, skill_model
 from services.skills_data import CATEGORIES
 
@@ -77,3 +78,36 @@ def remove_skill(skill_id):
     if skill_model.remove_skill(skill_id) == 0:
         return {"error": "Skill not found."}, 404
     return {"message": "Skill removed."}, 200
+
+
+def user_detail(user_id):
+    user = user_model.get_by_id(user_id)
+    if not user:
+        return {"error": "User not found."}, 404
+
+    analyses = analysis_model.list_for_admin(user_id)
+    scores = [a["score"] for a in analyses]
+
+    missing = Counter()
+    for a in analyses:
+        missing.update(a["missing_skills"])
+
+    return {
+        "user": {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "role": user["role"],
+            "is_blocked": bool(user["is_blocked"]),
+            "created_at": user["created_at"].isoformat(),
+        },
+        "summary": {
+            "total_analyses": len(analyses),
+            "average_score": round(sum(scores) / len(scores), 1) if scores else 0,
+            "best_score": max(scores) if scores else 0,
+            "last_active": analyses[0]["created_at"] if analyses else None,
+            "top_missing_skills": [{"skill": k, "count": v} for k, v in missing.most_common(3)],
+        },
+        "history": [{"date": a["created_at"], "score": a["score"]} for a in reversed(analyses)],
+        "analyses": analyses,
+    }, 200
