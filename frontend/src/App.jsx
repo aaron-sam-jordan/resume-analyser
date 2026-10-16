@@ -1,27 +1,28 @@
-import { useEffect, useState } from "react";
-import { api } from "./api/client";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Upload from "./pages/Upload";
+import Dashboard from "./pages/admin/Dashboard";
+
+function Home() {
+  const { user, loading } = useAuth();
+  if (loading) return <p style={{ padding: 24 }}>Loading...</p>;
+  if (!user) return <Navigate to="/login" replace />;
+  return <Navigate to={user.role === "admin" ? "/admin" : "/upload"} replace />;
+}
 
 export default function App() {
-  const { user, loading } = useAuth();
-  const [server, setServer] = useState("checking...");
-
-  useEffect(() => {
-    api.get("/health")
-      .then(() => setServer("connected"))
-      .catch((e) => setServer(e.message));
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Resume Analyser</h1>
-      <div className="card" style={{ maxWidth: 420 }}>
-        <p>Server: <strong>{server}</strong></p>
-        <p>{user ? `Logged in as ${user.name} (${user.role})` : "Not logged in"}</p>
-        <button className="btn">Sticker button</button>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+      <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
