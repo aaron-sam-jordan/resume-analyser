@@ -1,0 +1,11 @@
+{
+    "name":  "resume-analyser",
+    "version":  "1.0.0",
+    "private":  true,
+    "scripts":  {
+                    "dev":  "node scripts/dev.js"
+                },
+    "devDependencies":  {
+                            "concurrently":  "^10.0.6"
+                        }
+}
