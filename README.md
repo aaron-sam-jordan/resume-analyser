@@ -8,6 +8,16 @@ score, matched skills, missing skills and suggestions.
 - Frontend: React (Vite)
 - Analysis: pdfplumber, scikit-learn (TF-IDF, cosine similarity)
 
+## Features
+- Register and login with JWT, role-based access (user and admin)
+- Upload a resume (PDF or DOCX) and a job description
+- Validation: file type, real file content, size, scanned PDFs, non-resume detection
+- Match score: skill match (70%) + TF-IDF cosine similarity (30%)
+- Matched and missing skills, suggestions, page-length rule, experience check
+- Charts: doughnut, bar, line
+- Admin dashboard: stats, users (block and delete), per-user activity, analyses
+- Privacy: resumes are processed in memory and never stored
+
 ## Setup (backend)
 1. `cd backend`
 2. `python -m venv venv` then activate it
@@ -16,5 +26,6 @@ score, matched skills, missing skills and suggestions.
 5. Create the database and tables in SQL Server (`db/schema.sql`)
 6. `python app.py`
 
-## Status
-In development.
+## Run
+Backend: `cd backend`, activate venv, `python app.py`
+Frontend: `cd frontend`, `npm run dev`
