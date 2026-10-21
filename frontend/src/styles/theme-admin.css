@@ -1,0 +1,28 @@
+.admin-page { min-height:100vh; background:#051d1a; color:#e9fff8; padding:16px; }
+.admin-page .in { max-width:1100px; margin:0 auto; }
+.admin-page h1, .admin-page h2 { color:#3ddbb4; }
+.admin-page h3 { color:#ffb84d; font-size:16px; }
+.a-bar { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.a-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:14px; }
+.a-kpi { background:#0b3a33; border:1px solid #1c6b5f; border-left:5px solid #3ddbb4; border-radius:10px; padding:8px 14px; }
+.a-kpi:nth-child(2) { border-left-color:#ffb84d; }
+.a-kpi:nth-child(4) { border-left-color:#ff8a80; }
+.a-kpi b { display:block; font-size:30px; }
+.a-panel { background:#0b3a33; border:1px solid #1c6b5f; border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+.a-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-bottom:14px; }
+.a-chart { position:relative; height:240px; }
+.a-scroll { overflow-x:auto; }
+.admin-page table { width:100%; border-collapse:collapse; font-size:14px; min-width:520px; }
+.admin-page th { text-align:left; color:#9fd9cc; border-bottom:1px solid #1c6b5f; padding:6px 8px; }
+.admin-page td { padding:7px 8px; border-bottom:1px solid #12453d; }
+.a-btn { font:inherit; font-size:13px; cursor:pointer; border-radius:6px; border:1px solid #1c6b5f; background:transparent; color:#e9fff8; padding:3px 10px; margin-right:6px; }
+.a-btn:hover { border-color:#ffb84d; }
+.a-btn.del { color:#ff8a80; border-color:#ff8a80; }
+.a-link { background:none; border:0; color:#3ddbb4; font:inherit; text-decoration:underline; cursor:pointer; padding:0; }
+.a-tag { padding:2px 10px; border-radius:99px; font-size:12px; border:1px solid; }
+.a-tag.ok { color:#3ddbb4; border-color:#3ddbb4; }
+.a-tag.bl { color:#ff8a80; border-color:#ff8a80; }
+.a-chip { display:inline-block; margin:0 6px 6px 0; padding:2px 12px; border-radius:99px; font-size:13px; border:1px solid; }
+.a-chip.ok { color:#3ddbb4; border-color:#3ddbb4; }
+.a-chip.no { color:#ff8a80; border-color:#ff8a80; }
+.a-err { background:#ff8a80; color:#000; border-radius:10px; padding:8px 14px; margin-bottom:12px; font-weight:600; }
