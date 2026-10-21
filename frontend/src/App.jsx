@@ -5,6 +5,7 @@ import AdminRoute from "./components/AdminRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Upload from "./pages/Upload";
+import Result from "./pages/Result";
 import Dashboard from "./pages/admin/Dashboard";
 
 function Home() {
@@ -21,6 +22,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+      <Route path="/result/:id" element={<ProtectedRoute><Result /></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
