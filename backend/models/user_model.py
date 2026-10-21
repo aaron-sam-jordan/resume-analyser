@@ -44,3 +44,10 @@ def count_users():
 def count_blocked():
     row = fetch_one("SELECT COUNT(*) AS total FROM users WHERE is_blocked = 1")
     return row["total"]
+
+def update_name(user_id, name):
+    return execute("UPDATE users SET name = ? WHERE id = ?", (name, user_id))
+
+
+def update_password(user_id, password_hash):
+    return execute("UPDATE users SET password_hash = ? WHERE id = ?", (password_hash, user_id))

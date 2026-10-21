@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 export default function AdminRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <p style={{ padding: 24 }}>Loading...</p>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
   if (user.role !== "admin") return <Navigate to="/upload" replace />;
   return children;
 }

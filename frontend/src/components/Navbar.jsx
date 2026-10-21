@@ -8,11 +8,13 @@ export default function Navbar() {
     <div className="nav">
       <b>Resume Analyser</b>
       <span>
+        <Link to="/">Home</Link>
         <Link to="/upload">Analyse</Link>
+        <Link to="/profile">Profile</Link>
         {user && (
           <>
             Hi, {user.name}
-            <button className="btn" onClick={() => { logout(); navigate("/login"); }}>Logout</button>
+            <button className="btn" onClick={() => { logout(); navigate("/"); }}>Logout</button>
           </>
         )}
       </span>

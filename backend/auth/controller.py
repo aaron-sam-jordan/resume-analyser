@@ -17,8 +17,14 @@ def _make_token(user_id):
 
 
 def _public(user):
-    return {"id": user["id"], "name": user["name"],
-            "email": user["email"], "role": user["role"]}
+    created = user.get("created_at")
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+        "role": user["role"],
+        "created_at": created.isoformat() if created else None,
+    }
 
 
 def register_user(data):
@@ -62,3 +68,25 @@ def login_user(data):
 
 def get_current_user():
     return {"user": _public(g.user)}, 200
+
+
+def update_profile(data):
+    name = (data.get("name") or "").strip()
+    if not name:
+        return {"error": "Enter your name."}, 400
+    if len(name) > 100:
+        return {"error": "Name is too long."}, 400
+    user_model.update_name(g.user["id"], name)
+    user = user_model.get_by_id(g.user["id"])
+    return {"message": "Profile updated.", "user": _public(user)}, 200
+
+
+def change_password(data):
+    current = data.get("current_password") or ""
+    new_password = data.get("new_password") or ""
+    if not check_password_hash(g.user["password_hash"], current):
+        return {"error": "Current password is wrong."}, 400
+    if len(new_password) < 8:
+        return {"error": "New password must be at least 8 characters."}, 400
+    user_model.update_password(g.user["id"], generate_password_hash(new_password))
+    return {"message": "Password changed."}, 200

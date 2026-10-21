@@ -22,3 +22,16 @@ def login():
 def me():
     body, status = controller.get_current_user()
     return jsonify(body), status
+
+@auth_bp.route("/profile", methods=["PATCH"])
+@login_required
+def update_profile():
+    body, status = controller.update_profile(request.get_json(silent=True) or {})
+    return jsonify(body), status
+
+
+@auth_bp.route("/change-password", methods=["POST"])
+@login_required
+def change_password():
+    body, status = controller.change_password(request.get_json(silent=True) or {})
+    return jsonify(body), status

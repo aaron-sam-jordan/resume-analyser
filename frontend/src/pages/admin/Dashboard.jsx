@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Line, Bar } from "react-chartjs-2";
 import "../../components/charts/setup";
 import { api } from "../../api/client";
@@ -28,11 +28,10 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [analyses, setAnalyses] = useState([]);
-  const [detail, setDetail] = useState(null);
   const [error, setError] = useState("");
 
   function handleErr(err) {
-    if (err.status === 401) { logout(); navigate("/login"); return; }
+    if (err.status === 401) { logout(); navigate("/"); return; }
     setError(err.message);
   }
 
@@ -44,25 +43,13 @@ export default function Dashboard() {
 
   useEffect(() => { load(); }, []);
 
-  async function openUser(id) {
-    try { setDetail(await api.get(`/admin/users/${id}`)); } catch (e) { handleErr(e); }
-  }
-
   async function toggleBlock(u) {
-    try {
-      await api.patch(`/admin/users/${u.id}/block`);
-      load();
-      if (detail && detail.user.id === u.id) openUser(u.id);
-    } catch (e) { handleErr(e); }
+    try { await api.patch(`/admin/users/${u.id}/block`); load(); } catch (e) { handleErr(e); }
   }
 
   async function removeUser(u) {
     if (!window.confirm(`Delete ${u.name} and all their analyses? This cannot be undone.`)) return;
-    try {
-      await api.del(`/admin/users/${u.id}`);
-      if (detail && detail.user.id === u.id) setDetail(null);
-      load();
-    } catch (e) { handleErr(e); }
+    try { await api.del(`/admin/users/${u.id}`); load(); } catch (e) { handleErr(e); }
   }
 
   if (!stats && !error) return <div className="admin-page">Loading...</div>;
@@ -72,7 +59,7 @@ export default function Dashboard() {
       <div className="in">
         <div className="a-bar">
           <h1>Admin Dashboard</h1>
-          <span>{user.email} <button className="a-btn" onClick={() => { logout(); navigate("/login"); }}>Logout</button></span>
+          <span>{user.email} <button className="a-btn" onClick={() => { logout(); navigate("/"); }}>Logout</button></span>
         </div>
         {error && <div className="a-err" role="alert">{error}</div>}
 
@@ -103,13 +90,13 @@ export default function Dashboard() {
         )}
 
         <div className="a-panel">
-          <h3>Users (click a name to see their activity)</h3>
+          <h3>Users (click a name to open their activity page)</h3>
           <div className="a-scroll"><table>
             <thead><tr><th>Name</th><th>Email</th><th>Analyses</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
               {users.map((u) => (
                 <tr key={u.id}>
-                  <td><button className="a-link" onClick={() => openUser(u.id)}>{u.name}</button></td>
+                  <td><Link className="a-link" to={`/admin/users/${u.id}`}>{u.name}</Link></td>
                   <td>{u.email}</td>
                   <td>{u.analyses_count}</td>
                   <td><span className={`a-tag ${u.is_blocked ? "bl" : "ok"}`}>{u.is_blocked ? "Blocked" : "Active"}</span></td>
@@ -126,38 +113,6 @@ export default function Dashboard() {
             </tbody>
           </table></div>
         </div>
-
-        {detail && (
-          <div className="a-panel">
-            <h3>Activity of {detail.user.name}</h3>
-            <p>{detail.user.email} · {detail.user.role} · joined {fmt(detail.user.created_at)} · {detail.user.is_blocked ? "Blocked" : "Active"}</p>
-            <p>
-              Analyses: <b>{detail.summary.total_analyses}</b> · Average: <b>{detail.summary.average_score}%</b> ·
-              Best: <b>{detail.summary.best_score}%</b> · Last active: <b>{fmt(detail.summary.last_active)}</b>
-            </p>
-            {detail.summary.top_missing_skills.length > 0 && (
-              <p>Needs to work on: {detail.summary.top_missing_skills.map((s) => <span key={s.skill} className="a-chip no">{s.skill}</span>)}</p>
-            )}
-            {detail.history.length > 0 && (
-              <div className="a-chart"><Line data={{ labels: detail.history.map((h, i) => `Attempt ${i + 1}`),
-                datasets: [{ data: detail.history.map((h) => h.score), borderColor: "#ffb84d", backgroundColor: "#ffb84d33", fill: true, tension: 0.3 }] }}
-                options={opts("Attempt", "Score (%)", { scales: { x: axis("Attempt"), y: { ...axis("Score (%)"), max: 100 } } })} /></div>
-            )}
-            <div className="a-scroll"><table>
-              <thead><tr><th>Job</th><th>Date</th><th>Score</th><th>Matched</th><th>Missing</th></tr></thead>
-              <tbody>
-                {detail.analyses.map((a) => (
-                  <tr key={a.id}>
-                    <td>{a.job_title || "-"}</td><td>{fmt(a.created_at)}</td><td>{a.score}%</td>
-                    <td>{a.matched_skills.map((s) => <span key={s} className="a-chip ok">{s}</span>)}</td>
-                    <td>{a.missing_skills.map((s) => <span key={s} className="a-chip no">{s}</span>)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table></div>
-            <button className="a-btn" onClick={() => setDetail(null)}>Close</button>
-          </div>
-        )}
 
         <div className="a-panel">
           <h3>Recent analyses</h3>
