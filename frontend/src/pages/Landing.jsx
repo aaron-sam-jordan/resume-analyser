@@ -13,7 +13,7 @@ export default function Landing() {
           {user ? (
             <>
               <Link to={user.role === "admin" ? "/admin" : "/upload"}>Dashboard</Link>
-              {user.role !== "admin" && <Link to="/profile">Profile</Link>}
+              <Link to={user.role === "admin" ? "/admin/profile" : "/profile"}>Profile</Link>
             </>
           ) : (
             <>

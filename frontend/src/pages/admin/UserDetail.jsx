@@ -1,3 +1,4 @@
+import AdminNav from "../../components/AdminNav";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Line } from "react-chartjs-2";
@@ -58,6 +59,7 @@ export default function UserDetail() {
   return (
     <div className="admin-page">
       <div className="in">
+                <AdminNav />
         <p><Link className="a-link" to="/admin">← Back to dashboard</Link></p>
 
         <div className="a-bar">

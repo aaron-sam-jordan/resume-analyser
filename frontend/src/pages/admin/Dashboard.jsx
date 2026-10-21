@@ -1,3 +1,4 @@
+import AdminNav from "../../components/AdminNav";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Line, Bar } from "react-chartjs-2";
@@ -23,7 +24,7 @@ const opts = (xTitle, yTitle, extra = {}) => ({
 });
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
@@ -57,10 +58,8 @@ export default function Dashboard() {
   return (
     <div className="admin-page">
       <div className="in">
-        <div className="a-bar">
-          <h1>Admin Dashboard</h1>
-          <span>{user.email} <button className="a-btn" onClick={() => { logout(); navigate("/"); }}>Logout</button></span>
-        </div>
+            <AdminNav />
+            <h1>Admin Dashboard</h1>
         {error && <div className="a-err" role="alert">{error}</div>}
 
         {stats && (

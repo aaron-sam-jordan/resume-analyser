@@ -26,3 +26,13 @@
 .a-chip.ok { color:#3ddbb4; border-color:#3ddbb4; }
 .a-chip.no { color:#ff8a80; border-color:#ff8a80; }
 .a-err { background:#ff8a80; color:#000; border-radius:10px; padding:8px 14px; margin-bottom:12px; font-weight:600; }
+.a-nav { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+  background:#0b3a33; border:1px solid #1c6b5f; border-radius:12px; padding:8px 14px; margin-bottom:16px; }
+.a-nav a { color:#3ddbb4; font-weight:600; margin-right:16px; text-decoration:none; }
+.a-nav a:hover { text-decoration:underline; }
+.a-nav b { color:#ffb84d; margin-right:20px; }
+.a-nav .right { font-size:14px; }
+.a-input { width:100%; font:inherit; padding:8px 12px; border-radius:8px; border:1px solid #1c6b5f;
+  background:#051d1a; color:#e9fff8; margin-bottom:10px; }
+.a-ok { background:#3ddbb4; color:#000; border-radius:10px; padding:8px 14px; margin-bottom:10px; font-weight:600; }
+.a-input:focus-visible, .a-btn:focus-visible, .a-link:focus-visible { outline:2px solid #ffb84d; outline-offset:2px; }

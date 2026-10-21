@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import Landing from "./pages/Landing";
@@ -9,6 +10,12 @@ import Result from "./pages/Result";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import UserDetail from "./pages/admin/UserDetail";
+import AdminProfile from "./pages/admin/AdminProfile";
+
+function ProfileSwitch() {
+  const { user } = useAuth();
+  return user.role === "admin" ? <Navigate to="/admin/profile" replace /> : <Profile />;
+}
 
 export default function App() {
   return (
@@ -18,9 +25,10 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
       <Route path="/result/:id" element={<ProtectedRoute><Result /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><ProfileSwitch /></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />
       <Route path="/admin/users/:id" element={<AdminRoute><UserDetail /></AdminRoute>} />
+      <Route path="/admin/profile" element={<AdminRoute><AdminProfile /></AdminRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
