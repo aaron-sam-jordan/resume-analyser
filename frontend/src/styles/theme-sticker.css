@@ -190,7 +190,8 @@ button.avatar:hover { background: var(--ink); }
 .float.no { background: #fff; border: 1.5px solid var(--crimson); color: var(--crimson-dark); }
 .f1 { --r: -6deg; left: 6px; top: 330px; }
 .f2 { --r: 5deg; left: 250px; bottom: 6px; animation-delay: 0.8s; }
-.f3 { --r: -3deg; left: 0; top: 14px; animation-delay: 1.4s; }
+.f3 { --r: -3deg; left: 0; top: 14px; animation-delay: 1.4s; } 
+.f4 { --r: -1deg; left: 290px;}
 .stage-cap { position: absolute; right: 0; bottom: -4px; font-size: 11px; letter-spacing: 0.2em; font-weight: 700; color: var(--muted); text-transform: uppercase; }
 
 .land-marquee { background: var(--lime); border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); overflow: hidden; white-space: nowrap; padding: 12px 0; }

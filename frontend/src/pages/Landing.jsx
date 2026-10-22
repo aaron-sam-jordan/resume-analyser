@@ -37,6 +37,7 @@ function Stage() {
       <span className="float no f1">Tableau ✗</span>
       <span className="float no f2">Machine Learning ✗</span>
       <span className="float ok f3">Python ✓</span>
+      <span className="float ok f4">Eligible ✓ </span>
       <div className="stage-cap">Sample result</div>
     </div>
   );
