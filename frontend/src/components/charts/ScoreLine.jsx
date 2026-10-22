@@ -5,9 +5,9 @@ export default function ScoreLine({ scores }) {
   const data = {
     labels: scores.map((_, i) => `Attempt ${i + 1}`),
     datasets: [{
-      label: "Match score (%)", data: scores, borderColor: "#000", backgroundColor: "#7be0a0",
+      label: "Match score (%)", data: scores, borderColor: "#E10600", backgroundColor: "rgba(225, 6, 0, 0.12)",
       fill: true, tension: 0.3, borderWidth: 3, pointRadius: 6,
-      pointBackgroundColor: "#ffe14d", pointBorderColor: "#000", pointBorderWidth: 2.5,
+      pointBackgroundColor: "#BFE23A", pointBorderColor: "#10362A", pointBorderWidth: 2,
     }],
   };
   const options = {

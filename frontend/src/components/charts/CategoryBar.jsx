@@ -6,8 +6,8 @@ export default function CategoryBar({ categories }) {
   const data = {
     labels,
     datasets: [
-      { label: "Resume", data: labels.map((k) => categories[k].resume), backgroundColor: "#ffe14d", borderColor: "#000", borderWidth: 2.5 },
-      { label: "Job needs", data: labels.map((k) => categories[k].job), backgroundColor: "#2438d6", borderColor: "#000", borderWidth: 2.5 },
+      { label: "Resume", data: labels.map((k) => categories[k].resume), backgroundColor: "#BFE23A", borderColor: "#9DBF1E", borderWidth: 1, borderRadius: 6 },
+      { label: "Job needs", data: labels.map((k) => categories[k].job), backgroundColor: "#E10600", borderRadius: 6 },
     ],
   };
   const options = {

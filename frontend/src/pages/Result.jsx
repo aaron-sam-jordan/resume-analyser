@@ -84,8 +84,7 @@ export default function Result() {
         {d.top_keywords && d.top_keywords.length > 0 && (
           <div className="card" style={{ marginBottom: 16 }}>
             <h3>Top keywords in your resume</h3>
-            <div>{d.top_keywords.map((k) => <span key={k.word} className="chip" style={{ background: "#ffe14d" }}>{k.word}</span>)}</div>
-          </div>
+          <div>{d.top_keywords.map((k) => <span key={k.word} className="chip ok">{k.word}</span>)}</div>          </div>
         )}
 
         <Link className="btn" to="/upload" style={{ textDecoration: "none", display: "inline-block" }}>Analyse another</Link>

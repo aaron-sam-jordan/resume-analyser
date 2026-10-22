@@ -1,9 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import Avatar from "./Avatar";
 
 export default function AdminNav() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   return (
     <div className="a-nav">
       <span>
@@ -12,10 +10,7 @@ export default function AdminNav() {
         <Link to="/admin">Dashboard</Link>
         <Link to="/admin/profile">Profile</Link>
       </span>
-      <span className="right">
-        {user.name}{" "}
-        <button className="a-btn" onClick={() => { logout(); navigate("/"); }}>Logout</button>
-      </span>
+      <Avatar variant="admin" />
     </div>
   );
 }

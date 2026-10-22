@@ -1,3 +1,4 @@
+import { AvatarCircle } from "../../components/Avatar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/client";
@@ -50,7 +51,8 @@ export default function AdminProfile() {
 
         <div className="a-grid">
           <div className="a-panel">
-            <h3>{user.name}</h3>
+            <AvatarCircle name={user.name} large />
+            <h3 style={{ marginTop: 10 }}>{user.name}</h3>
             <p>{user.email}</p>
             <p>
               <span className="a-tag ok">{user.role}</span>{" "}

@@ -1,3 +1,4 @@
+import { AvatarCircle } from "../components/Avatar";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/client";
@@ -62,7 +63,8 @@ export default function Profile() {
 
         <div className="cols" style={{ marginBottom: 16 }}>
           <div className="card">
-            <h3>{user.name}</h3>
+            <AvatarCircle name={user.name} large />
+            <h3 style={{ marginTop: 10 }}>{user.name}</h3>
             <p>{user.email}</p>
             <p>
               <span className="tag ok">{user.role}</span>{" "}
