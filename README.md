@@ -27,5 +27,4 @@ score, matched skills, missing skills and suggestions.
 6. `python app.py`
 
 ## Run
-Backend: `cd backend`, activate venv, `python app.py`
-Frontend: `cd frontend`, `npm run dev`
+from main project folder resume-analyser npm run dev
