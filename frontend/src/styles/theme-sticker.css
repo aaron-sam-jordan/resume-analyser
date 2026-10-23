@@ -271,3 +271,6 @@ button.avatar:hover { background: var(--ink); }
 }
 .footer-bottom { position: relative; z-index: 2; }
 .footer-mark { pointer-events: none; }
+.forgot-row { text-align: right; margin: -4px 0 12px; font-size: 13px; }
+.otp-input { text-align: center; letter-spacing: 0.5em; font-size: 22px; font-weight: 700; }
+.link-btn { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--crimson-dark); text-decoration: underline; cursor: pointer; }

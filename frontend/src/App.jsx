@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import Landing from "./pages/Landing";
@@ -24,6 +25,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/result/:id" element={<ProtectedRoute><Result /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><ProfileSwitch /></ProtectedRoute>} />
       <Route path="/admin" element={<AdminRoute><Dashboard /></AdminRoute>} />

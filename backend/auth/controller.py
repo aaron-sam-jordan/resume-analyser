@@ -1,11 +1,21 @@
+import secrets
 import pyodbc
 from datetime import datetime, timedelta, timezone
 import jwt
 from flask import g
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
-from models import user_model
+from models import user_model, reset_model
+from services.mailer import send_mail
 from services.validator import EMAIL_RE
+
+OTP_MAX_ATTEMPTS = 5
+RESEND_SECONDS = 60
+SENT_MESSAGE = "If this email is registered, a 6-digit code has been sent to it."
+
+
+def _utcnow():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 def _make_token(user_id):
@@ -90,3 +100,59 @@ def change_password(data):
         return {"error": "New password must be at least 8 characters."}, 400
     user_model.update_password(g.user["id"], generate_password_hash(new_password))
     return {"message": "Password changed."}, 200
+
+
+def forgot_password(data):
+    email = (data.get("email") or "").strip().lower()
+    if not email or not EMAIL_RE.fullmatch(email):
+        return {"error": "Enter a valid email address."}, 400
+
+    user = user_model.get_by_email(email)
+    if user and not user["is_blocked"]:
+        latest = reset_model.get_latest(user["id"])
+        too_soon = latest and (_utcnow() - latest["created_at"]).total_seconds() < RESEND_SECONDS
+        if not too_soon:
+            otp = f"{secrets.randbelow(10 ** 6):06d}"
+            expires = _utcnow() + timedelta(minutes=Config.OTP_EXPIRY_MINUTES)
+            reset_model.create_reset(user["id"], generate_password_hash(otp), expires)
+            body = (
+                f"Hi {user['name']},\n\n"
+                f"Your Resume Analyser password reset code is: {otp}\n\n"
+                f"It expires in {Config.OTP_EXPIRY_MINUTES} minutes and can be used once.\n"
+                f"If you did not ask for this, you can ignore this email.\n"
+            )
+            if not send_mail(user["email"], "Your Resume Analyser password reset code", body):
+                reset_model.delete_for_user(user["id"])
+                return {"error": "Could not send the email. Please try again later."}, 500
+
+    return {"message": SENT_MESSAGE}, 200
+
+
+def reset_password(data):
+    email = (data.get("email") or "").strip().lower()
+    otp = (data.get("otp") or "").strip()
+    new_password = data.get("new_password") or ""
+
+    if not email or not otp or not new_password:
+        return {"error": "Fill in all the fields."}, 400
+    if len(new_password) < 8:
+        return {"error": "New password must be at least 8 characters."}, 400
+
+    invalid = ({"error": "Invalid or expired code."}, 400)
+
+    user = user_model.get_by_email(email)
+    if not user:
+        return invalid
+    reset = reset_model.get_latest(user["id"])
+    if not reset:
+        return invalid
+    if reset["expires_at"] < _utcnow() or reset["attempts"] >= OTP_MAX_ATTEMPTS:
+        reset_model.delete_for_user(user["id"])
+        return invalid
+    if not check_password_hash(reset["otp_hash"], otp):
+        reset_model.add_attempt(reset["id"])
+        return invalid
+
+    user_model.update_password(user["id"], generate_password_hash(new_password))
+    reset_model.delete_for_user(user["id"])
+    return {"message": "Password reset. You can log in now."}, 200

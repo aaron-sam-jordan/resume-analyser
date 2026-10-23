@@ -43,6 +43,7 @@ export default function Login() {
                value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
         <input className="input" type="password" placeholder="Password" aria-label="Password"
                value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+        <div className="forgot-row"><Link to="/forgot-password">Forgot password?</Link></div>       
         <button className="btn" type="submit" disabled={busy}>
           {busy ? "Logging in..." : "Login"}
         </button>

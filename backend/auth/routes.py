@@ -35,3 +35,15 @@ def update_profile():
 def change_password():
     body, status = controller.change_password(request.get_json(silent=True) or {})
     return jsonify(body), status
+
+
+@auth_bp.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    body, status = controller.forgot_password(request.get_json(silent=True) or {})
+    return jsonify(body), status
+
+
+@auth_bp.route("/reset-password", methods=["POST"])
+def reset_password():
+    body, status = controller.reset_password(request.get_json(silent=True) or {})
+    return jsonify(body), status
