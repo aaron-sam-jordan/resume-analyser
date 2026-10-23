@@ -31,6 +31,7 @@ export default function Footer() {
             <li><a href="/#how">How it works</a></li>
             <li><a href="/#features">Features</a></li>
             <li><a href="/#privacy">Privacy</a></li>
+            <li><Link to="/about">About us</Link></li>
             <li><Link to={dash}>Analyse a resume</Link></li>
           </ul>
         </div>

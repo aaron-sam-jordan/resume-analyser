@@ -59,6 +59,7 @@ export default function Landing() {
           <a href="#how">How it works</a>
           <a href="#features">Features</a>
           <a href="#privacy">Privacy</a>
+          <Link to="/about">About</Link>
         </nav>
         <div className="land-right">
           {user ? (
