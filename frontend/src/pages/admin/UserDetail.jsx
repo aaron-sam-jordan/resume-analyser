@@ -7,7 +7,7 @@ import { api } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import "../../styles/theme-admin.css";
 
-const LIGHT = "#bfeee3";
+const LIGHT = "#34f0c4";
 const GRID = "#1c6b5f";
 const fmt = (d) => (d ? new Date(d).toLocaleDateString() : "-");
 const axis = (title) => ({

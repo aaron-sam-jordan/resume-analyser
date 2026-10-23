@@ -1,27 +1,11 @@
 import AdminNav from "../../components/AdminNav";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Line, Bar } from "react-chartjs-2";
-import "../../components/charts/setup";
 import { api } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import "../../styles/theme-admin.css";
 
-const LIGHT = "#bfeee3";
-const GRID = "#1c6b5f";
 const fmt = (d) => (d ? new Date(d).toLocaleDateString() : "-");
-const axis = (title) => ({
-  beginAtZero: true,
-  ticks: { color: LIGHT, precision: 0 },
-  grid: { color: GRID },
-  title: { display: !!title, text: title, color: LIGHT },
-});
-const opts = (xTitle, yTitle, extra = {}) => ({
-  responsive: true, maintainAspectRatio: false,
-  plugins: { legend: { display: false } },
-  scales: { x: axis(xTitle), y: axis(yTitle) },
-  ...extra,
-});
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -58,38 +42,21 @@ export default function Dashboard() {
   return (
     <div className="admin-page">
       <div className="in">
-            <AdminNav />
-            <h1>Admin Dashboard</h1>
+        <AdminNav />
+        <h1>Admin Dashboard</h1>
         {error && <div className="a-err" role="alert">{error}</div>}
 
         {stats && (
-          <>
-            <div className="a-kpis">
-              <div className="a-kpi"><b>{stats.total_users}</b>Total users</div>
-              <div className="a-kpi"><b>{stats.total_analyses}</b>Resumes analysed</div>
-              <div className="a-kpi"><b>{stats.average_score}%</b>Average match score</div>
-              <div className="a-kpi"><b>{stats.blocked_users}</b>Blocked users</div>
-            </div>
-
-            <div className="a-grid">
-              <div className="a-panel"><h3>Analyses per day</h3><div className="a-chart">
-                <Line data={{ labels: stats.analyses_per_day.map((d) => d.date.slice(5)),
-                  datasets: [{ data: stats.analyses_per_day.map((d) => d.total), borderColor: "#3ddbb4", backgroundColor: "#3ddbb433", fill: true, tension: 0.3 }] }}
-                  options={opts("Date", "Analyses")} /></div></div>
-              <div className="a-panel"><h3>Score distribution</h3><div className="a-chart">
-                <Bar data={{ labels: Object.keys(stats.score_distribution),
-                  datasets: [{ data: Object.values(stats.score_distribution), backgroundColor: "#ffb84d" }] }}
-                  options={opts("Match score (%)", "Number of analyses")} /></div></div>
-              <div className="a-panel"><h3>Most missing skills</h3><div className="a-chart">
-                <Bar data={{ labels: stats.most_missing_skills.map((s) => s.skill),
-                  datasets: [{ data: stats.most_missing_skills.map((s) => s.count), backgroundColor: "#ff8a80" }] }}
-                  options={opts("Times missing", "", { indexAxis: "y" })} /></div></div>
-            </div>
-          </>
+          <div className="a-kpis">
+            <div className="a-kpi"><b>{stats.total_users}</b>Total users</div>
+            <div className="a-kpi"><b>{stats.total_analyses}</b>Resumes analysed</div>
+            <div className="a-kpi"><b>{stats.average_score}%</b>Average match score</div>
+            <div className="a-kpi"><b>{stats.blocked_users}</b>Blocked users</div>
+          </div>
         )}
 
         <div className="a-panel">
-          <h3>Users (click a name to open their activity page)</h3>
+          <h3>Users</h3>
           <div className="a-scroll"><table>
             <thead><tr><th>Name</th><th>Email</th><th>Analyses</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
