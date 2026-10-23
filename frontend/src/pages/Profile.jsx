@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ErrorBox from "../components/ErrorBox";
 import ScoreLine from "../components/charts/ScoreLine";
@@ -128,6 +129,7 @@ export default function Profile() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }

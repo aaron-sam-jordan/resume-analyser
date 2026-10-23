@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/Footer";
 import Avatar from "../components/Avatar";
 
 const TOP = ["Skill match", "TF-IDF similarity", "Experience check", "Private by design", "Resume in, insights out"];
@@ -139,7 +140,7 @@ export default function Landing() {
         <h2>Ready to improve your resume?</h2>
         <Link className="btn lime" to={dash}>{user ? "Go to dashboard" : "Create a free account"} →</Link>
       </section>
-      <footer className="land-foot">Resume Analyser · College final year project</footer>
+      <footer />
     </div>
   );
 }

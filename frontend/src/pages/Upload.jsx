@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ErrorBox from "../components/ErrorBox";
 
@@ -114,6 +115,7 @@ export default function Upload() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }
