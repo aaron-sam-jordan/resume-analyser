@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
-import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import ErrorBox from "../components/ErrorBox";
 import SkillChip from "../components/SkillChip";
@@ -90,7 +89,6 @@ export default function Result() {
 
         <Link className="btn" to="/upload" style={{ textDecoration: "none", display: "inline-block" }}>Analyse another</Link>
       </div>
-      <Footer />
     </>
   );
 }

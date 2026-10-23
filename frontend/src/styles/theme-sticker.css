@@ -264,9 +264,10 @@ button.avatar:hover { background: var(--ink); }
 .footer-bottom button:hover { color: var(--lime); }
 .footer-mark { font-family: var(--display); text-transform: uppercase; text-align: center; white-space: nowrap; user-select: none;
   font-size: clamp(60px, 14.5vw, 230px); line-height: 0.8; color: rgba(249, 234, 215, 0.08); margin: 6px 0 -0.06em; }
-.page { min-height: calc(100vh - 400px); }
 @media (max-width: 800px) {
   .footer-inner { grid-template-columns: 1fr 1fr; padding: 40px 20px 20px; }
   .footer-brand { grid-column: 1 / -1; }
   .footer-bottom { padding: 16px 20px; }
 }
+.footer-bottom { position: relative; z-index: 2; }
+.footer-mark { pointer-events: none; }

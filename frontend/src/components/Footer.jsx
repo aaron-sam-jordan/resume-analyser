@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+function backToTop() {
+  const opts = { top: 0, behavior: "smooth" };
+  window.scrollTo(opts);
+  document.documentElement.scrollTo(opts);
+  document.body.scrollTo(opts);
+  const page = document.querySelector(".land");
+  if (page) page.scrollTo(opts);
+}
+
+
 export default function Footer() {
   const { user } = useAuth();
   const isAdmin = user && user.role === "admin";
@@ -57,7 +67,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Resume Analyser. All rights reserved.</span>
         <span>Your resume is never stored.</span>
-        <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top ↑</button>
+        <button type="button" onClick={backToTop}>Back to top ↑</button>
       </div>
       <div className="footer-mark" aria-hidden="true">Resume Analyser</div>
     </footer>
