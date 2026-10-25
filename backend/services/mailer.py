@@ -16,12 +16,25 @@ def send_mail(to, subject, body):
     msg["Subject"] = subject
     msg.set_content(body)
 
+    password = Config.SMTP_PASSWORD.replace(" ", "")
+    context = ssl.create_default_context()
+
     try:
-        with smtplib.SMTP(Config.SMTP_HOST, Config.SMTP_PORT, timeout=15) as server:
-            server.starttls(context=ssl.create_default_context())
-            server.login(Config.SMTP_USER, Config.SMTP_PASSWORD.replace(" ", ""))
-            server.send_message(msg)
+        if Config.SMTP_PORT == 465:
+            with smtplib.SMTP_SSL(Config.SMTP_HOST, 465, context=context, timeout=20) as server:
+                server.login(Config.SMTP_USER, password)
+                server.send_message(msg)
+        else:
+            with smtplib.SMTP(Config.SMTP_HOST, Config.SMTP_PORT, timeout=20) as server:
+                server.ehlo()
+                server.starttls(context=context)
+                server.ehlo()
+                server.login(Config.SMTP_USER, password)
+                server.send_message(msg)
         return True
+    except smtplib.SMTPAuthenticationError:
+        logging.error("Gmail rejected the login. Check SMTP_USER and the app password.")
+        return False
     except Exception:
         logging.exception("Could not send email")
         return False
