@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
+import { downloadUserReport } from "../../utils/userReport";
 import "../../styles/theme-admin.css";
 
 const fmt = (d) => (d ? new Date(d).toLocaleDateString() : "-");
@@ -56,7 +57,7 @@ export default function Dashboard() {
         )}
 
         <div className="a-panel">
-          <h3>Users</h3>
+          <h3>Users (click a name to open their activity page)</h3>
           <div className="a-scroll"><table>
             <thead><tr><th>Name</th><th>Email</th><th>Analyses</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
@@ -69,6 +70,7 @@ export default function Dashboard() {
                   <td>
                     {u.role === "admin" ? "Admin" : (
                       <>
+                        <button className="a-btn solid" onClick={() => downloadUserReport(u, analyses)}>Report</button>
                         <button className="a-btn" onClick={() => toggleBlock(u)}>{u.is_blocked ? "Unblock" : "Block"}</button>
                         <button className="a-btn del" onClick={() => removeUser(u)}>Delete</button>
                       </>

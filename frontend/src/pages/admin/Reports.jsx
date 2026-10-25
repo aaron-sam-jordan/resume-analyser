@@ -10,6 +10,7 @@ import {
 import "../../components/charts/setup";
 import { api } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
+import { downloadUserReport, userAnalyses } from "../../utils/userReport";
 import "../../styles/theme-admin.css";
 
 // PDF colors (r, g, b)
@@ -261,6 +262,7 @@ export default function Reports() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [analyses, setAnalyses] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [sel, setSel] = useState("");
   const [error, setError] = useState("");
@@ -271,8 +273,8 @@ export default function Reports() {
   }
 
   useEffect(() => {
-    api.get("/admin/analyses")
-      .then((a) => { setAnalyses(a.analyses); setLoaded(true); })
+    Promise.all([api.get("/admin/analyses"), api.get("/admin/users")])
+      .then(([a, u]) => { setAnalyses(a.analyses); setUsers(u.users); setLoaded(true); })
       .catch(handleErr);
   }, []);
 
@@ -373,6 +375,23 @@ export default function Reports() {
                     </td>
                   </tr>
                 ))}</tbody>
+              </table></div>
+            </div>
+
+            <div className="a-panel">
+              <h3>User reports</h3>
+              <div className="a-scroll"><table>
+                <thead><tr><th>User</th><th>Email</th><th>Analyses</th><th>Avg score</th><th>Report</th></tr></thead>
+                <tbody>{users.filter((u) => u.role !== "admin").map((u) => {
+                  const list = userAnalyses(u, analyses);
+                  return (
+                    <tr key={u.id}>
+                      <td>{u.name}</td><td>{u.email}</td><td>{u.analyses_count}</td>
+                      <td>{list.length ? `${avg(list.map((a) => Number(a.score) || 0))}%` : "-"}</td>
+                      <td><button className="a-btn solid" onClick={() => downloadUserReport(u, analyses)}>PDF</button></td>
+                    </tr>
+                  );
+                })}</tbody>
               </table></div>
             </div>
           </>
