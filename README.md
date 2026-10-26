@@ -33,3 +33,6 @@ score, matched skills, missing skills and suggestions.
 
 ## Run
 from main project folder resume-analyser npm run dev
+
+## Admin Analysis
+![Admin analysis page](docs/screenshots/admin-analysis.png)
