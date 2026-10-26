@@ -1,3 +1,5 @@
+![Resume Analyser](docs/screenshots/banner.png)
+
 # Resume Analyser
 
 A web app that compares a resume with a job description and shows a match
@@ -17,6 +19,9 @@ score, matched skills, missing skills and suggestions.
 - Charts: doughnut, bar, line
 - Admin dashboard: stats, users (block and delete), per-user activity, analyses
 - Privacy: resumes are processed in memory and never stored
+
+## Architecture
+![Architecture](docs/screenshots/architecture.png)
 
 ## Setup (backend)
 1. `cd backend`
